@@ -32,6 +32,8 @@ const connectDB = async () => {
   }
 };
 
+connectDB();
+
 // mongoose.connect(process.env.DATABASE_URI,{
 //       serverSelectionTimeoutMS: 30000,
 //       socketTimeoutMS: 45000,
