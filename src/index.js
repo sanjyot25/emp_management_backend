@@ -18,9 +18,26 @@ app.use(cors());
 app.use(express.json());
 
 // Database connection
-mongoose.connect(process.env.DATABASE_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.DATABASE_URI, {
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    // Retry connection after 5 seconds
+    setTimeout(connectDB, 5000);
+  }
+};
+
+// mongoose.connect(process.env.DATABASE_URI,{
+//       serverSelectionTimeoutMS: 30000,
+//       socketTimeoutMS: 45000,
+//     })
+//   .then(() => console.log('Connected to MongoDB'))
+//   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRoutes);
